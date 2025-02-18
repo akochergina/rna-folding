@@ -125,3 +125,11 @@ def test_is_canonical():
    
     return "RNA structure is canonical tests passed"
 
+def all_tests_rna_structure():
+    """
+    Run all tests for RNA structure
+
+    Returns:
+        String All tests passed if all tests are successful, otherwise raises an exception
+    """
+    return test_alignment_edges() + "\n" + test_edges_to_dot_bracket() + "\n" + test_parse_rna_structure() + "\n" + test_is_canonical_base_pair() + "\n" + test_is_canonical()
