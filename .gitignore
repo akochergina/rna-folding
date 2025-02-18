@@ -169,3 +169,11 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+notebooks/Testdata/
+notebooks/testdata.zip
+*.aln
+*.stk
+*.txt
+*.fa
