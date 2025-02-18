@@ -10,7 +10,7 @@ class RNAMolecule:
     Represents an RNA sequence and its corresponding structure.
     
     Attributes:
-        seq (str): RNA sequence (e.g., "AUGC").
+        seq (str): aligned RNA sequence (e.g., "AUGC").
         structure (str, optional): RNA structure in dot-bracket notation (e.g., "..((..))..").
         
     Methods:
@@ -142,3 +142,42 @@ class RNAMolecule:
                 return False
                     
         return True
+    
+    def rna_structure_projection(self):
+        """ 
+        Perform RNA structure projection. The projected structure does not contain any base pair that involved gaps in the alignment string.
+
+        Args:
+            aligned_sequence: RNA sequence
+            dot_bracket_structure: RNA structure in dot-bracket notation
+        
+        Returns:
+            (sequence, projected_structure): Tuple of RNA sequence and projected structure
+        
+        Example:
+            rna_structure_projection('GCC-CUUAG-U-GAAUCCAGC', '((.((...))(((...)))))') == ('GCCCUUAGUGAAUCCAGC', '((.(...)((...).)))')
+        """
+        assert len(self.seq) == len(self.structure), "Sequences must have the same length"
+        edges = parse_rna_structure(self.structure)
+        sequence = []
+        projected_structure = []
+        to_convert = [] # if first bracket is deleted, we need to delete the second bracket as well, so to convert second one in a dot
+        for i, (s, b) in enumerate(zip(self.seq, self.structure)):
+            if i in to_convert:
+                if b == ')':
+                    b = '.'
+                to_convert.remove(i)
+            if s == '-':
+                if b == '(':
+                    # we need to find in edges if there is a pair with i
+                    found = False
+                    for edge in edges:
+                        if edge[0] == i+1:
+                            found = True
+                            break
+                    if found:
+                        to_convert.append(edge[1]-1)
+            else:
+                sequence.append(s)
+                projected_structure.append(b)
+        return ''.join(sequence), ''.join(projected_structure)

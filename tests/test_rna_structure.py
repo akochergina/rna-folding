@@ -125,6 +125,12 @@ def test_is_canonical():
    
     return "RNA structure is canonical tests passed"
 
+def test_rna_structure_projection():
+    assert rna_structure_projection('AC--G-T', "((..).)") == ('ACGT', '(())'), f"Expected ('ACGT', '(())') but got {rna_structure_projection('AC--G-T', '((..).)')}"
+    assert rna_structure_projection('--CA---T', '(.)((.))') == ('CAT', '.()'), f"Expected ('CAT', '.()') but got {rna_structure_projection('--CA---T', '(.)((.))')}"
+    assert rna_structure_projection('GCC-CUUAG-U-GAAUCCAGC', '((.((...))(((...)))))') == ('GCCCUUAGUGAAUCCAGC', '((.(...)((...).)))'), f"Expected ('GCCCUUAGUGAAUCCAGC', '((.(...)((...).)))') but got {rna_structure_projection('GCC-CUUAG-U-GAAUCCAGC', '((.((...))(((...)))))')}"
+    return "RNA projection tests passed"
+
 def all_tests_rna_structure():
     """
     Run all tests for RNA structure
@@ -132,4 +138,11 @@ def all_tests_rna_structure():
     Returns:
         String All tests passed if all tests are successful, otherwise raises an exception
     """
-    return test_alignment_edges() + "\n" + test_edges_to_dot_bracket() + "\n" + test_parse_rna_structure() + "\n" + test_is_canonical_base_pair() + "\n" + test_is_canonical()
+    result = ""
+    result += test_alignment_edges() + "\n"
+    result += test_edges_to_dot_bracket() + "\n"
+    result += test_parse_rna_structure() + "\n"
+    result += test_is_canonical_base_pair() + "\n"
+    result += test_is_canonical() + "\n"
+    result += test_rna_structure_projection() + "\n"
+    return result
