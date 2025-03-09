@@ -3,6 +3,14 @@ This module implements simple nussinov and nussinov traceback
 to construct the structure of a single rna sequence
 """
 
+import sys
+import os
+
+parent_dir = os.path.abspath(os.path.join(os.getcwd()))
+sys.path.append(parent_dir)
+
+from modules.simplecount import *
+
 complementary_bases=["AT","CG","AU","UG"]
 
 def nussinov_matrix(alignstr, cost_function, m):
@@ -60,7 +68,7 @@ def nussinov_traceback_rec(alignstr,nussMat, costFun, indices,m):
                 if list_of_bases[i]+list_of_bases[j] in complementary_bases or list_of_bases[j]+list_of_bases[i] in complementary_bases :
                     previous_bases.append((i,j))
                 return previous_bases
-        for k in range(i+1,j):
+        for k in range(i+1,j+1):
             if cost== (nussMat[i][k-1] + nussMat[k][j]) :
                 previous_bases=nussinov_traceback_rec(alignstr,nussMat,costFun, (i,k-1),m) + nussinov_traceback_rec(alignstr,nussMat,costFun, (k,j),m)
                 return previous_bases
@@ -84,3 +92,6 @@ def RNA_consensus_structure(alignstr, cost_function, m=2):
     """
     nussMat=nussinov_matrix(alignstr, cost_function, m)
     return nussinov_TB(alignstr,nussMat, cost_function,m)
+
+print(RNA_consensus_structure("CGGAAAGUAGCUUAGCUUGG--UAGAGCACUCGGUUUGGGACCGA---------GGGGUCGCAGGUUCGAAUCCUGUCUUUCCGA ", simple_count_cost, 2))
+

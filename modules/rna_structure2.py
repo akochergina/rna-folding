@@ -24,7 +24,7 @@ def dot_bracket_string(seq_length, base_pairs, decalage=-1):
         db[ind0+decalage]="("
         db[ind1+decalage]=")"
     db=''.join(db)
-    return db
+    return db[:seq_length]
 
 def parse_RNA_structure(dbstring):
     """

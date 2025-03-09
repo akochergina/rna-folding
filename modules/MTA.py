@@ -79,10 +79,8 @@ def MTA_nussinov_matrix(list_of_structures, cost_function, init_cost, m=2):
                 alpha0= nussinovMatrix[i+1][j-1] + cost_function((i,j), list_of_structures)
             else :
                 alpha0=0
-            alpha1 = max(
-                nussinovMatrix[i][k-1] + nussinovMatrix[k][j]
-                for k in range(i, j+1)
-            )
+            alpha1 = max(nussinovMatrix[i][k-1] + nussinovMatrix[k][j]
+                         for k in range(i, j+1))
             nussinovMatrix[i][j]=max(alpha0, alpha1)
             i+=1
             j+=1
@@ -112,8 +110,9 @@ def nussinov_MTA_traceback_rec(list_of_structures,nussMat, costFun, initCost, in
                 previous_bases=nussinov_MTA_traceback_rec(list_of_structures,nussMat, costFun, initCost,(i+1,j-1),m)
                 previous_bases.append((i,j))
                 found=True
+                #print("happens")
         if not found:
-            for k in range(i+1,j):
+            for k in range(i+1,j+1):
                 if cost== (nussMat[i][k-1] + nussMat[k][j]) and not found:
                     found=True
                     previous_bases=nussinov_MTA_traceback_rec(list_of_structures,nussMat, costFun, initCost,(i,k-1),m) + nussinov_MTA_traceback_rec(list_of_structures,nussMat, costFun, initCost,(k,j),m)
@@ -143,7 +142,7 @@ def maximum_total_accuracy_db_str(list_of_structures,m):
     Returns : string : the consensus structure in form of dot bracket string
     """
     nussMat=MTA_nussinov_matrix(list_of_structures, constfunctionMTA(1), unpaired_acc, m)
-    print(nussMat)
+    #print(nussMat)
     base_pairs= nussinov_TB_MTA(list_of_structures,nussMat, constfunctionMTA(1),unpaired_acc,m)
     return (dot_bracket_string(len(list_of_structures[0]),base_pairs,0))
 
@@ -167,3 +166,14 @@ def MTA(aligned_strings_list,m=2):
     return maximum_total_accuracy_db_str(list_of_struc,m)
 
 #print(MTA (["-GCC-AAA-GGC","GGGC-AUU-GCC", "-ACGGAAUCCGU"]))
+"""
+
+test=["GCAGUCGUGGCCGAGU---GGUUAAGGCGUCUGACUCGAAAUCAGAUUCCCUCUGGGAGCGUAGGUUCGAAUCCUACCGGCUGCG",
+"GCGGGGGUGCCCGAGCCUGGCCAAAGGGGUCGGGCUCAGGACCCGAUGGCGUAGGCCUGCGUGGGUUCAAAUCCCACCCCCCGCA",
+"UGGAGUAUAGCCAAG--UGG--UAAGGCAUCGGUUUUUGGUACCG---------GCAUGCAAAGGUUCGAAUCCUUUUACUCCAG",
+"CGGAAAGUAGCUUAGCUUGG--UAGAGCACUCGGUUUGGGACCGA---------GGGGUCGCAGGUUCGAAUCCUGUCUUUCCGA",
+"GCCGGGGUGGGGUAGUGGCCAUCCUGG---GGGACUGUGGAUCCC----------CUGACCCGGGUUCAAUUCCCGGUCCCGGCC",
+"GUAAACAUAGUUUA------AUCAAAACAUUAGAUUGUGAAUCUAA----------CAAUAGAGGCUCGAAACCUCUUGCUUACC",
+"AGUAAAGUCAGCUA------AAAAAGCUUUUGGGCCCAUACCCCAA----------ACAUGUUGGUUAAACCCCUUCCUUUACUA"]
+
+print(MTA (test))"""
