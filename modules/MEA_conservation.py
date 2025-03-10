@@ -27,10 +27,13 @@ def gamma_inc(indices, aligned_sequences, gamma):
         elif not simple_count_cost(seq[i], seq[j]):
             count-=1
 
-    return count
+    return gamma*count
 
 def constfunction_conservation(constante, list_of_bpp, aligned_sequences, gamma):
     return lambda indices, list_of_struc : paired_expected_acc(indices, list_of_bpp, constante) + gamma_cov(indices, aligned_sequences) + gamma_inc(indices, aligned_sequences, gamma)
+
+#def constfunction_conservation(list_of_bp, list_of_bpp, aligned_sequences, gamma, constante):
+#    return lambda indices,list_of_struc : constfunctionMTA(list_of_bp, constante) + gamma_cov(indices, aligned_sequences) + gamma_inc(indices, aligned_sequences, gamma)
 
 def MEA_conservation(list_of_seq,constante, gamma,m=2):
     print(list_of_seq)
