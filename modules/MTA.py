@@ -27,6 +27,8 @@ def unpaired_acc(i,list_of_struc):
             count+=1
     return count
 
+#print(unpaired_acc)
+
 def paired_acc(indices, list_of_struc, constante):
     ''' Computes the cost function paired_acc
     Arg : list_of_struc : a list of structures, defined as dot brackets
@@ -134,22 +136,23 @@ def nussinov_TB_MTA(list_of_structures,nussMat, costFun,initCost,m):
 
 
 
-def maximum_total_accuracy_db_str(list_of_structures,m):
+def maximum_total_accuracy_db_str(list_of_structures,constante,m):
     """ Returns the consensus dbstring of the structure 
     of the list of the already aligned structures
     Args : list_of_structures : list of the aligned structures
             m : int, minimal loop length
     Returns : string : the consensus structure in form of dot bracket string
     """
-    nussMat=MTA_nussinov_matrix(list_of_structures, constfunctionMTA(1), unpaired_acc, m)
+    nussMat=MTA_nussinov_matrix(list_of_structures, constfunctionMTA(constante), unpaired_acc, m)
     #print(nussMat)
-    base_pairs= nussinov_TB_MTA(list_of_structures,nussMat, constfunctionMTA(1),unpaired_acc,m)
+    base_pairs= nussinov_TB_MTA(list_of_structures,nussMat, constfunctionMTA(constante),unpaired_acc,m)
     return (dot_bracket_string(len(list_of_structures[0]),base_pairs,0))
 
 
 
-def MTA(aligned_strings_list,m=2):
+def MTA(aligned_strings_list,constante,m=2):
     #reconstruc the list of unaligned RNA sequences
+    print(aligned_strings_list)
     list_of_seq=[]
     for algstr in aligned_strings_list:
         list_of_seq.append(core_sequence(algstr))
@@ -159,13 +162,14 @@ def MTA(aligned_strings_list,m=2):
     for sequence in list_of_seq:
         bp=(RNA_consensus_structure(sequence, simple_count_cost, m)) #the base pairs of the structure from the unaligned sequence
         db=dot_bracket_string(len(sequence),bp,0)#the dot-bracket string of the structure from the unaligned sequence
-        print(aligned_strings_list[i], db)
+        #print(aligned_strings_list[i], db)
         aligned_db=reverse_projection(aligned_strings_list[i], db) #the aligned dot bracket
         list_of_struc.append(aligned_db)
         i+=1
-    return maximum_total_accuracy_db_str(list_of_struc,m)
+    print(list_of_struc)
+    return maximum_total_accuracy_db_str(list_of_struc,constante,m)
 
-#print(MTA (["-GCC-AAA-GGC","GGGC-AUU-GCC", "-ACGGAAUCCGU"]))
+
 """
 
 test=["GCAGUCGUGGCCGAGU---GGUUAAGGCGUCUGACUCGAAAUCAGAUUCCCUCUGGGAGCGUAGGUUCGAAUCCUACCGGCUGCG",
@@ -176,4 +180,27 @@ test=["GCAGUCGUGGCCGAGU---GGUUAAGGCGUCUGACUCGAAAUCAGAUUCCCUCUGGGAGCGUAGGUUCGAAUC
 "GUAAACAUAGUUUA------AUCAAAACAUUAGAUUGUGAAUCUAA----------CAAUAGAGGCUCGAAACCUCUUGCUUACC",
 "AGUAAAGUCAGCUA------AAAAAGCUUUUGGGCCCAUACCCCAA----------ACAUGUUGGUUAAACCCCUUCCUUUACUA"]
 
-print(MTA (test))"""
+print(MTA (test))
+
+test2= ['(((((((((.((.(...)((((.((.(.(((((.(((.((...))((...)-))(..)).))))).)))-)))((((...)))))(((((....)))...(.(..))))).)--)-))))))))).', 
+ '(((((((((.((...(...((...)((.((((((.(.((((((..)(...(-((((..))).)((...(-(((...(...)))).))))))))))).)))))))....))))--)-)))))))))-', 
+ '(--(((((...)...))(((-(...((((...(((......-...(..)))-)))((((...)((((..-.)))))))))...)))))(((...))...((((..))))))(--(-(...))))--', 
+ '(((((....))))(((((((-((..(....).))))(((..-.))((.(((-..)(((((...)((.(.-..)))))))).)))))))))((...((((((((..).)))))--)-))((..))))', 
+ '.((((...)))(...))(((-((((((.(....(((((((...))(.....-.))(.((((((..))))-((...)--))...)((-(((.-.)-))))))))))-.)).))--)))))((...))', 
+ '.((((((((.((((.((.((-((...))(...)))))(((..))))(((((-......(..)))...)))))((((((((...)))--.)-----((...))(..))))))...--)))))).)).', 
+ '(((...)((....).)((((-(...)).)))))((((.(((((..)(((((-.((.((...(((((((.---..))))((...))))-.))).)))))))))))).)......---)((...)))-', 
+ '(((((((((((...((((((-((.((......))(..))))-))...))(((.........)).(...)-)))))))((((((.(((((((...)).)))(.(...))))))--)-)))))))))-', 
+ '(((((...)))...(..)))-((...).(((((((((((...(..).(.((-(((...)))((...).)-))))))--)((((.(((-(--....)))).)))))-))))(.--.))((...))))', 
+ '(((((((((((....)).))-(....((((.(.(((.((((-((((((((.-.((...))...))))))-.)((((....))))))(((...))))))...))))(...)))--)-)))))))).)', 
+ '(.(((((((.((.((..((.-.........(((((((((((-(((.((((.-..)((((...))).)).-..))))))((...))))))))(...))))))))(.(...))))-)-))))))).)-', 
+ '(((((((((.(..((((...-(((..))))(((((((((.(-(((((.....)))...))(...)))))-)((((((...)))))))((((...)......))))).)))))--)-)))))))))-', 
+ '(((((((((.((.(((((((-(.((((....)))(((((..-.)....)).-)))....)))))).)))-(((((((...).((((.(((....)))))(...)))))))))--)-)))))))).)', 
+ '(((((((((.((.(((((((-(..(((....))((((((..-.)....)).-))...)))))))).))(-((((((....)))...)))((...))...((((..).)))))--)-)))))))).)', 
+ '(((((((((.((((((((((-(.((((....)))(((((..-.)....)).-)))(..)))))((...)-)))))((...)(...)))(((...))...((((..).)))))--)-))))))))).']
+
+
+for struc in test2:
+    print(parse_RNA_structure(struc))
+print(paired_acc((13,17),test2,1))
+
+"""
