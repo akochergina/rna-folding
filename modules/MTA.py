@@ -106,18 +106,23 @@ def nussinov_MTA_traceback_rec(list_of_structures,nussMat, costFun, initCost, in
     else :
         n=len(nussMat[i])
         cost=nussMat[i][j]
-        if (i+1<n and j-1>=0):
+
+        for k in range(i+1,j+1):
+            if cost== (nussMat[i][k-1] + nussMat[k][j]) and not found:
+                found=True
+                previous_bases=nussinov_MTA_traceback_rec(list_of_structures,nussMat, costFun, initCost,(i,k-1),m) + nussinov_MTA_traceback_rec(list_of_structures,nussMat, costFun, initCost,(k,j),m)
+
+        if (i+1<n and j-1>=0) and not found:
             alpha0= nussMat[i+1][j-1] + costFun(indices, list_of_structures)
             if cost==alpha0:
                 previous_bases=nussinov_MTA_traceback_rec(list_of_structures,nussMat, costFun, initCost,(i+1,j-1),m)
                 previous_bases.append((i,j))
                 found=True
                 #print("happens")
+        
         if not found:
-            for k in range(i+1,j+1):
-                if cost== (nussMat[i][k-1] + nussMat[k][j]) and not found:
-                    found=True
-                    previous_bases=nussinov_MTA_traceback_rec(list_of_structures,nussMat, costFun, initCost,(i,k-1),m) + nussinov_MTA_traceback_rec(list_of_structures,nussMat, costFun, initCost,(k,j),m)
+            print("not found", i, j)
+        
         return previous_bases
     
 
