@@ -30,8 +30,11 @@ In this project, some modules are not useful. Here are the useful ones.
     │   ├── finalnotebook.ipynb # The Jupyter Notebook
     │   ├── Testdata #folder containing  RNA alignements
 
-    ├── tests/              # Some test functions
-    ├── README.md          # Project documentation
+    ├── tests/                  # Some test functions
+    │   ├── test_nussinov.py    #imports the test data
+    │   ├── compare.py          #compares the different consensus structures
+
+    ├── README.md               # Project documentation
 ```
 
 ## Dependencies
