@@ -29,22 +29,22 @@ def unpaired_acc(i,list_of_struc):
 
 #print(unpaired_acc)
 
-def paired_acc(indices, list_of_struc, constante):
+def paired_acc(indices, list_of_struc, list_of_bp, constante):
     ''' Computes the cost function paired_acc
     Arg : list_of_struc : a list of structures, defined as dot brackets
         indices : the tuple of indices we are looking for the cost of
     Returns : int : paired_act(i)
     '''
     count=0
-    for struc in list_of_struc:
+    for i in range(len(list_of_struc)):
         #print(struc)
-        base_pairs=parse_RNA_structure(struc)
+        base_pairs=list_of_bp[i]
         if indices in base_pairs:
             count+=1
     return 2*constante*count
 
-def constfunctionMTA(constante):
-    return lambda indices,list_of_struc : paired_acc(indices, list_of_struc, constante)
+def constfunctionMTA(list_of_bp, constante):
+    return lambda indices,list_of_struc : paired_acc(indices, list_of_struc, list_of_bp, constante)
 
 
 
@@ -148,9 +148,14 @@ def maximum_total_accuracy_db_str(list_of_structures,constante,m):
             m : int, minimal loop length
     Returns : string : the consensus structure in form of dot bracket string
     """
-    nussMat=MTA_nussinov_matrix(list_of_structures, constfunctionMTA(constante), unpaired_acc, m)
+    list_of_bp=[]
+    for struc in list_of_structures:
+        bp = parse_RNA_structure(struc)
+        list_of_bp.append(bp)
+
+    nussMat=MTA_nussinov_matrix(list_of_structures, constfunctionMTA(list_of_bp, constante), unpaired_acc, m)
     #print(nussMat)
-    base_pairs= nussinov_TB_MTA(list_of_structures,nussMat, constfunctionMTA(constante),unpaired_acc,m)
+    base_pairs= nussinov_TB_MTA(list_of_structures,nussMat, constfunctionMTA(list_of_bp, constante),unpaired_acc,m)
     return (dot_bracket_string(len(list_of_structures[0]),base_pairs,0))
 
 
